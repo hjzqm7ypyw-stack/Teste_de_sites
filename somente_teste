@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#4b001d">
+
+  <title>Para Natália ❤️</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      width: 100%;
+      min-height: 100%;
+      background: #21000d;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top, #8b1745 0%, transparent 45%),
+        linear-gradient(135deg, #12000a, #4b001d, #8f1747);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* =========================
+       FUNDO & CORAÇÕES
+    ========================= */
+    .hearts {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -60px;
+      color: rgba(255, 130, 170, 0.65);
+      animation-name: subir;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      z-index: 0;
+    }
+
+    @keyframes subir {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-115vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* =========================
+       ABA DO ÁLBUM DE FOTOS
+    ========================= */
+    .album-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(18, 0, 10, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 10;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      overflow: hidden;
+    }
+
+    .album-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .btn-fechar-album {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.95rem;
+      z-index: 12;
+      backdrop-filter: blur(5px);
+      transition: background 0.3s;
+    }
+
+    .btn-fechar-album:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .album-titulo {
+      position: absolute;
+      top: 30px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+      color: #ffb6cb;
+      z-index: 11;
+      pointer-events: none;
+      text-shadow: 0 0 10px rgba(255, 100, 150, 0.5);
+    }
+
+    /* =========================
+       FOTOS FLUTUANTES NO ÁLBUM
+    ========================= */
+    .floating-photo {
+      position: absolute;
+      bottom: -180px;
+      width: clamp(110px, 22vw, 190px);
+      height: clamp(140px, 28vw, 240px);
+      object-fit: cover;
+      border-radius: 18px;
+      border: 2px solid rgba(255, 220, 230, 0.6);
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 18px rgba(255, 110, 160, 0.3);
+      pointer-events: none;
+      opacity: 0;
+      animation-name: subirFoto;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      z-index: 10;
+    }
+
+    @keyframes subirFoto {
+      0% {
+        transform: translateY(0) rotate(var(--rotacao-inicial)) scale(0.7);
+        opacity: 0;
+      }
+      12% {
+        opacity: var(--opacidade);
+      }
+      50% {
+        transform: translateY(-55vh) translateX(var(--movimento)) rotate(var(--rotacao-meio)) scale(1);
+      }
+      100% {
+        transform: translateY(-125vh) translateX(var(--movimento-final)) rotate(var(--rotacao-final)) scale(0.85);
+        opacity: 0;
+      }
+    }
+
+    /* =========================
+       CONTAINER & CARTA
+    ========================= */
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      padding: 40px 30px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 28px;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        inset 0 0 30px rgba(255, 255, 255, 0.03);
+      animation: aparecer 1.2s ease;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .coracao {
+      font-size: 70px;
+      line-height: 1;
+      margin-bottom: 20px;
+      animation: pulsar 1.4s infinite;
+      filter: drop-shadow(0 0 15px rgba(255, 70, 120, 0.7));
+    }
+
+    @keyframes pulsar {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 8vw, 4.5rem);
+      line-height: 1.1;
+      margin-bottom: 14px;
+      color: white;
+      text-shadow:
+        0 0 10px rgba(255, 100, 150, 0.7),
+        0 0 25px rgba(255, 50, 110, 0.4);
+    }
+
+    .subtitulo {
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      line-height: 1.5;
+      color: #ffc3d5;
+      margin-bottom: 30px;
+    }
+
+    /* BALÕES DE CHAT */
+    .mensagem {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .balao {
+      position: relative;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 20px 20px 20px 4px;
+      padding: 16px 20px;
+      text-align: left;
+      font-size: clamp(0.98rem, 3.8vw, 1.1rem);
+      line-height: 1.6;
+      color: #fff5f8;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      animation: aparecerBalao 0.6s ease backwards;
+    }
+
+    .balao strong {
+      color: #ff9fbd;
+      text-shadow: 0 0 8px rgba(255, 100, 150, 0.3);
+    }
+
+    .balao::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -8px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 10px 12px 0;
+      border-color: transparent rgba(255, 255, 255, 0.15) transparent transparent;
+    }
+
+    @keyframes aparecerBalao {
+      from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* GRUPO DE BOTÕES */
+    .botoes-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .botao {
+      width: 100%;
+      max-width: 350px;
+      min-height: 54px;
+      padding: 14px 22px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(45deg, #ff326d, #ff719d);
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(255, 50, 110, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .botao-secundario {
+      background: linear-gradient(45deg, #8f1747, #be2663);
+      box-shadow: 0 10px 30px rgba(143, 23, 71, 0.35);
+    }
+
+    .botao:active {
+      transform: scale(0.96);
+      box-shadow: 0 5px 20px rgba(255, 50, 110, 0.4);
+    }
+
+    #surpresa {
+      display: none;
+      margin: 28px auto 0;
+      padding: 22px;
+      max-width: 580px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 170, 195, 0.15);
+      animation: aparecer 0.8s ease;
+    }
+
+    #surpresa p {
+      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      line-height: 1.7;
+      color: #ffe1eb;
+    }
+
+    .assinatura {
+      margin-top: 35px;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #ffb6cb;
+      font-style: italic;
+    }
+
+    .assinatura strong { color: white; }
+
+    .data {
+      margin-top: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        align-items: flex-start;
+        padding: max(20px, env(safe-area-inset-top)) 14px max(25px, env(safe-area-inset-bottom));
+      }
+      .card {
+        margin-top: 10px;
+        padding: 35px 20px;
+        border-radius: 24px;
+      }
+      .coracao { font-size: 60px; margin-bottom: 15px; }
+      h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
+      .subtitulo { margin-bottom: 25px; }
+      .botao { max-width: 100%; font-size: 0.98rem; }
+      #surpresa { padding: 18px; }
+      .assinatura { margin-top: 30px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FUNDO DE CORAÇÕES DA PÁGINA PRINCIPAL -->
+  <div class="hearts" id="hearts"></div>
+
+  <!-- ABA DO ÁLBUM SEPARADO -->
+  <div class="album-overlay" id="albumOverlay">
+    <div class="album-titulo">Nossas Lembranças ✨</div>
+    <button class="btn-fechar-album" onclick="fecharAlbum()">✕ Fechar</button>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <section class="card">
+
+      <div class="coracao">❤️</div>
+
+      <h1>Para Natália</h1>
+
+      <p class="subtitulo">
+        Uma pequena surpresa para uma pessoa muito especial. 💕
+      </p>
+
+      <div class="mensagem">
+        <div class="balao" style="animation-delay: 0.2s;">
+          Existem pessoas que aparecem em nossas vidas e, de alguma forma, tornam tudo mais bonito.
+        </div>
+        <div class="balao" style="animation-delay: 0.4s;">
+          <strong>Você é uma dessas pessoas. ✨</strong>
+        </div>
+        <div class="balao" style="animation-delay: 0.6s;">
+          Talvez eu não consiga encontrar as palavras perfeitas para explicar o quanto você significa para mim. Mas quero que saiba que cada sorriso seu, cada conversa e cada momento ao seu lado se tornou uma lembrança que guardo com muito carinho.
+        </div>
+        <div class="balao" style="animation-delay: 0.8s;">
+          Se eu pudesse fazer um pedido, seria simples: que a vida continue nos dando motivos para sorrir, conversar, sonhar e criar momentos juntos.
+        </div>
+        <div class="balao" style="animation-delay: 1.0s;">
+          <strong>Porque, entre tantas pessoas no mundo, eu sou muito feliz por ter encontrado você. ❤️</strong>
+        </div>
+      </div>
+
+      <div class="botoes-container">
+        <button class="botao" onclick="mostrarSurpresa()">
+          💌 Clique aqui para uma surpresa
+        </button>
+
+        <!-- NOVO BOTÃO PARA ABRIR O ÁLBUM -->
+        <button class="botao botao-secundario" onclick="abrirAlbum()">
+          📸 Abrir Álbum de Fotos
+        </button>
+      </div>
+
+      <div id="surpresa">
+        <p>
+          "Você é uma das partes mais bonitas da minha história. E, se depender de mim, ainda temos muitos capítulos incríveis para escrever juntos. ❤️"
+        </p>
+      </div>
+
+      <div class="assinatura">
+        Com todo meu carinho,<br>
+        <strong>Gabryel seu amor ❤️</strong>
+      </div>
+
+      <div class="data">
+        Feito especialmente para você ✨
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    /* =========================
+       SURPRESA
+    ========================== */
+    function mostrarSurpresa() {
+      const surpresa = document.getElementById("surpresa");
+      if (surpresa.style.display === "block") {
+        surpresa.style.display = "none";
+      } else {
+        surpresa.style.display = "block";
+        setTimeout(() => {
+          surpresa.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 100);
+      }
+    }
+
+    /* =========================
+       CORAÇÕES FLUTUANTES (PÁGINA PRINCIPAL)
+    ========================== */
+    function criarCoracao() {
+      const container = document.getElementById("hearts");
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+
+      const emojis = ["❤️", "💕", "💗", "💖", "💘"];
+      heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = (14 + Math.random() * 22) + "px";
+      heart.style.animationDuration = (6 + Math.random() * 7) + "s";
+
+      container.appendChild(heart);
+      setTimeout(() => { heart.remove(); }, 14000);
+    }
+
+    const intervaloCoracao = window.innerWidth <= 600 ? 900 : 500;
+    setInterval(criarCoracao, intervaloCoracao);
+
+    /* =========================
+       ÁLBUM DE FOTOS (ABA SEPARADA)
+    ========================== */
+    const fotosAdicionais = [
+      "Foto_nossa.jpeg",
+      "Foto_Nossa2.jpeg",
+      "Foto_Nossa3.jpeg",
+      "Foto_Nossa4.jpeg",
+      "Foto_Nossa5.jpeg"
+    ];
+
+    let geradorFotos = null;
+
+    function criarFotoFlutuante() {
+      const album = document.getElementById("albumOverlay");
+      if (!album.classList.contains("active")) return;
+
+      const foto = document.createElement("img");
+      foto.classList.add("floating-photo");
+      foto.src = fotosAdicionais[Math.floor(Math.random() * fotosAdicionais.length)];
+      foto.alt = "";
+
+      foto.style.left = Math.random() * 85 + "vw";
+      foto.style.animationDuration = (8 + Math.random() * 6) + "s";
+
+      foto.style.setProperty("--rotacao-inicial", (-12 + Math.random() * 24) + "deg");
+      foto.style.setProperty("--rotacao-meio", (-8 + Math.random() * 16) + "deg");
+      foto.style.setProperty("--rotacao-final", (-15 + Math.random() * 30) + "deg");
+
+      foto.style.setProperty("--movimento", (-35 + Math.random() * 70) + "px");
+      foto.style.setProperty("--movimento-final", (-70 + Math.random() * 140) + "px");
+      foto.style.setProperty("--opacidade", (0.7 + Math.random() * 0.3));
+
+      album.appendChild(foto);
+
+      setTimeout(() => { foto.remove(); }, 15000);
+    }
+
+    function abrirAlbum() {
+      const album = document.getElementById("albumOverlay");
+      album.classList.add("active");
+
+      // Gera fotos imediatas
+      criarFotoFlutuante();
+      setTimeout(criarFotoFlutuante, 800);
+
+      // Inicia a chuva contínua de fotos no álbum
+      const tempoIntervalo = window.innerWidth <= 600 ? 2500 : 1800;
+      geradorFotos = setInterval(criarFotoFlutuante, tempoIntervalo);
+    }
+
+    function fecharAlbum() {
+      const album = document.getElementById("albumOverlay");
+      album.classList.remove("active");
+
+      // Para o gerador de fotos e limpa as fotos existentes na tela
+      clearInterval(geradorFotos);
+      const fotosRestantes = album.querySelectorAll(".floating-photo");
+      fotosRestantes.forEach(f => f.remove());
+    }
+  </script>
+
+</body>
+
+</html>
